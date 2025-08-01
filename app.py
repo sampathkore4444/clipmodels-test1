@@ -220,7 +220,7 @@ if uploaded_file is not None:
             st.metric(
                 label=f"{category['icon']} {category['name']}",
                 value=f"{score*100:.1f}%",
-                help=", ".join(category["prompts"][:3])
+                help=", ".join(category["prompts"][:3]))
             st.progress(min(1.0, score))  # Ensure progress doesn't exceed 1.0
         
         # Show top matching prompts
