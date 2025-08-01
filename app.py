@@ -161,7 +161,13 @@ def analyze_security_scene(image):
     top_category_name = max(category_scores.items(), key=lambda x: x[1])[0]
     top_category = next(cat for cat in PROMPT_CATEGORIES if cat["name"] == top_category_name)
     
-    return top_category, category_scores, similarities, all_prompts
+    return {
+        "result": top_category,
+        "category_scores": category_scores,
+        "similarities": similarities,
+        "all_prompts": all_prompts,
+        "prompt_categories": prompt_categories
+    }
 
 # File uploader
 uploaded_file = st.file_uploader("Upload a security camera image", type=["jpg", "png", "jpeg"])
@@ -176,7 +182,12 @@ if uploaded_file is not None:
         
         # Add a loading spinner while processing
         with st.spinner("Analyzing scene..."):
-            result, category_scores, all_scores, all_prompts = analyze_security_scene(image)
+            analysis = analyze_security_scene(image)
+            result = analysis["result"]
+            category_scores = analysis["category_scores"]
+            all_scores = analysis["similarities"]
+            all_prompts = analysis["all_prompts"]
+            prompt_categories = analysis["prompt_categories"]
         
         # Display main result with appropriate styling
         if result["color"] == "red":
