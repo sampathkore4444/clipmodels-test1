@@ -216,12 +216,14 @@ if uploaded_file is not None:
         
         # Show confidence meters for each category
         for category in PROMPT_CATEGORIES:
-            score = category_scores[category["name"]]
+            score = float(category_scores[category["name"]])  # Ensure score is float
+            safe_score = max(0.0, min(1.0, score))  # Clamp between 0 and 1
+            
             st.metric(
                 label=f"{category['icon']} {category['name']}",
-                value=f"{score*100:.1f}%",
-                help=", ".join(category["prompts"][:3]))
-            st.progress(min(1.0, score))  # Ensure progress doesn't exceed 1.0
+                value=f"{safe_score*100:.1f}%"
+            )
+            st.progress(safe_score)
         
         # Show top matching prompts
         st.markdown("---")
